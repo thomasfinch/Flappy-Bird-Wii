@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------------
 
-	Simple demonstration of sprites using textured quads
+    A flappy bird clone for Wii. No losing, just flappin' (it's incomplete).
 
 ---------------------------------------------------------------------------------*/
 
@@ -30,8 +30,6 @@ typedef struct {
 	int image;
 }Sprite;
 
-Sprite sprites[NUM_SPRITES];
-
 Sprite birdSprite;
 
 GXTexObj texObj;
@@ -51,8 +49,10 @@ int main( int argc, char **argv ){
 
 	GXColor background = {87, 235, 109, 0xff};
 
+    const int BIRD_SIZE = 64;
+    const int SCREEN_HEIGHT = 480;
+    const int SCREEN_WIDTH = 640;
 	int i;
-
 	int applyGravity = 1;
 
 	VIDEO_Init();
@@ -131,20 +131,6 @@ int main( int argc, char **argv ){
 
 	srand(time(NULL));
 
-	// for(i = 0; i < NUM_SPRITES; i++) {
-	// 	//random place and speed
-	// 	sprites[i].x = rand() % (640 - 32 ) << 8;
-	// 	sprites[i].y = rand() % (480 - 32 ) << 8 ;
-	// 	sprites[i].dx = (rand() & 0xFF) + 0x100;
-	// 	sprites[i].dy = (rand() & 0xFF) + 0x100;
-	// 	sprites[i].image = 0;
-
-	// 	if(rand() & 1)
-	// 		sprites[i].dx = -sprites[i].dx;
-	// 	if(rand() & 1)
-	// 		sprites[i].dy = -sprites[i].dy;
-	// }
-
 	birdSprite.x = 300;
 	birdSprite.y = 200;
 	birdSprite.dx = 0;
@@ -174,20 +160,6 @@ int main( int argc, char **argv ){
 		guMtxTransApply (GXmodelView2D, GXmodelView2D, 0.0F, 0.0F, -5.0F);
 		GX_LoadPosMtxImm(GXmodelView2D,GX_PNMTX0);
 
-		// for(i = 0; i < NUM_SPRITES; i++) {
-		// 	sprites[i].x += sprites[i].dx;
-		// 	sprites[i].y += sprites[i].dy;
-			
-		// 	//check for collision with the screen boundaries
-		// 	if(sprites[i].x < (1<<8) || sprites[i].x > ((640-32) << 8))
-		// 		sprites[i].dx = -sprites[i].dx;
-
-		// 	if(sprites[i].y < (1<<8) || sprites[i].y > ((480-32) << 8))
-		// 		sprites[i].dy = -sprites[i].dy;
-
-		// 	drawSpriteTex( sprites[i].x >> 8, sprites[i].y >> 8, 32, 32, sprites[i].image);
-		// }
-
 		//Update sprite positions from velocity
 		birdSprite.x += birdSprite.dx;
 		birdSprite.y += birdSprite.dy;
@@ -200,14 +172,14 @@ int main( int argc, char **argv ){
 		// if (birdSprite.x < 0 || birdSprite.x > 640)
 		// 	birdSprite.dx = -birdSprite.dx;
 
-		if (birdSprite.y > 480) {
-			birdSprite.y = 480 - 66;
+		if (birdSprite.y > SCREEN_HEIGHT) {
+			birdSprite.y = SCREEN_HEIGHT - BIRD_SIZE - 2;
 			birdSprite.dy = 0;
 			applyGravity = 0;
 		}
 
 		//Draw sprites on the screen
-		drawSpriteTex(birdSprite.x, birdSprite.y, 64, 64, birdSprite.image);
+		drawSpriteTex(birdSprite.x, birdSprite.y, BIRD_SIZE, BIRD_SIZE, birdSprite.image);
 
 		GX_DrawDone();
 		
